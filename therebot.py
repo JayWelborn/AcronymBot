@@ -1,5 +1,4 @@
 import praw
-# import time imported so I can sleep in between calls to the API once this thing goes live
 from itertools import islice
 from Scraper import webopedia, netlingo
 from io import open
