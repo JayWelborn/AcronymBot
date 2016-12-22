@@ -5,11 +5,11 @@ from Scraper import webopedia, netlingo
 from io import open
 
 # create instance of Reddit for future actions
-reddit = praw.Reddit(client_id='qM505htuaT5pCw',
-                     client_secret='i46Ru1rEOdn__MdK3jAkJTQ7u7w',
+reddit = praw.Reddit(client_id='[REDACTED}',
+                     client_secret='[REDACTED}',
                      user_agent='Test Script by u/there_there_theramin',
                      username='there_there_theramin',
-                     password='qwerQWER1234!@#$')
+                     password='[REDACTED}')
 
 # create instance of subreddit for iterating
 subreddit = reddit.subreddit('learnprogramming')
