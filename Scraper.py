@@ -1,4 +1,4 @@
-import urllib2
+from urllib2 import urlopen
 from bs4 import BeautifulSoup
 from string import ascii_letters
 
@@ -20,7 +20,7 @@ def string_contains_alpha(s):
 
 def webopedia():
     # open page for reading
-    page = urllib2.urlopen('http://www.webopedia.com/quick_ref/textmessageabbreviations.asp')
+    page = urlopen('http://www.webopedia.com/quick_ref/textmessageabbreviations.asp')
 
     # use lxml to parse page into navigable BeautifulSoup object
     soup = BeautifulSoup(page, 'lxml')
@@ -51,10 +51,6 @@ def webopedia():
         else:
             acronyms.pop(index)
 
-    # reference
-    for item in acronyms:
-        print(item)
-
     # set up empty dictionary to add acronyms
     webopedia_dict = {}
 
@@ -81,17 +77,12 @@ def webopedia():
                 webopedia_dict[item] = webopedia_dict[item] + ' -OR- ' + acronyms[index + 2]
             continue
 
-
-    # reference
-    for key in sorted(webopedia_dict):
-        print(u'{}: {}'.format(key, webopedia_dict[key]))
-
     return webopedia_dict
 
 
 def netlingo():
     # open page for reading
-    page = urllib2.urlopen('http://www.netlingo.com/acronyms.php')
+    page = urlopen('http://www.netlingo.com/acronyms.php')
 
     # use lxml to parse page into navigable BeautifulSoup object
     soup = BeautifulSoup(page, 'lxml')
@@ -112,9 +103,6 @@ def netlingo():
         item = item.text
         item = item.replace(acronym, '')
         netlingo_dict[acronym] = item
-
-    for key in sorted(netlingo_dict):
-        print(u'\x1b[6;30;42m{}: {}\x1b[0m'.format(key, netlingo_dict[key]))
 
     return netlingo_dict
 
