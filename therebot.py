@@ -3,11 +3,11 @@ from Scraper import webopedia, netlingo
 from io import open
 
 # create instance of Reddit for future actions
-reddit = praw.Reddit(client_id='qM505htuaT5pCw',
-                     client_secret='i46Ru1rEOdn__MdK3jAkJTQ7u7w',
-                     user_agent='Test Script by u/there_there_theramin',
+reddit = praw.Reddit(client_id='*****',
+                     client_secret='*****',
+                     user_agent='*****',
                      username='there_there_theramin',
-                     password='qwerQWER1234!@#$')
+                     password='*****')
 
 # get acronym dictionary from netlingo.com
 netlingo_dict = netlingo()
