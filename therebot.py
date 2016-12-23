@@ -1,18 +1,13 @@
 import praw
-# import time imported so I can sleep in between calls to the API once this thing goes live
-from itertools import islice
 from Scraper import webopedia, netlingo
 from io import open
 
 # create instance of Reddit for future actions
-reddit = praw.Reddit(client_id='[REDACTED}',
-                     client_secret='[REDACTED}',
+reddit = praw.Reddit(client_id='qM505htuaT5pCw',
+                     client_secret='i46Ru1rEOdn__MdK3jAkJTQ7u7w',
                      user_agent='Test Script by u/there_there_theramin',
                      username='there_there_theramin',
-                     password='[REDACTED}')
-
-# create instance of subreddit for iterating
-subreddit = reddit.subreddit('learnprogramming')
+                     password='qwerQWER1234!@#$')
 
 # get acronym dictionary from netlingo.com
 netlingo_dict = netlingo()
@@ -26,8 +21,11 @@ def main():
     with open('comments.txt', 'r') as log:
         comment_history = log.read().splitlines()
 
+    # create instance of subreddit for iterating
+    subreddit = reddit.subreddit('askreddit')
+
     # gets iterable list of submissions in subreddit
-    for submission in islice(subreddit.stream.submissions(), 0, 100):
+    for submission in subreddit.hot():
         # prints title of each submission
         print('\n\t\t' + submission.title)
         # parses comments in submission for acronyms
@@ -54,21 +52,32 @@ def parse_comments(submission, comment_history):
             print(u'\x1b[6;30;42mComment Already Seen\n\n{}\n\nComment ID ={} \x1b[0m'.format(comment.body, comment.id))
             continue
 
+        elif comment.author is 'there_there_theramin':
+            print(u'\x1b[6;30;42mDon\'t reply to yourself')
+            with open('self_comment.txt', 'w') as file:
+                file.write('FOUND ONE!\n')
+            continue
+
         else:
             # look for acronyms in dictionary
             for word in comment.body.split():
-                for key in netlingo_dict:
-                    if key == word:
-                        comment_history.append(comment.id)
-                        if word not in words:
-                            words.append(word)
+                if word in netlingo_dict:
 
-                for key in webopedia_dict:
-                    if key == word:
+                    # to ensure each acronym is only used once per reply
+                    if word not in words:
+                        words.append(word)
+                        # adds comment to log so I don't reply to the same comment again
                         comment_history.append(comment.id)
-                        if word not in words:
-                            words.append(word)
 
+                if word in webopedia_dict:
+
+                    # to ensure each acronym is only used once per reply
+                    if word not in words:
+                        words.append(word)
+                        # adds comment to log so I don't reply to the same comment again
+                        comment_history.append(comment.id)
+
+        # if any acronyms detected, reply to comment
         if len(words) >= 1:
             reply(words, comment)
 
@@ -77,21 +86,23 @@ def reply(words, comment):
 
     # bot text opener
     bot_text = u"""
-Hello! I am a bot made to detect and explain common chat/internet acronyms.
-I have detected one or more acronyms in this comment. If this seems incorrect,
+Hello! I am a bot made to detect and explain common chat/internet acronyms/slang.
+I have detected one or more such items in this comment. If this seems incorrect,
 please send me a PM to address the mistake.\n\n"""
 
     for word in words:
+        # adds definition from netlingo to bot text
         if word in netlingo_dict:
             bot_text = u'{} The following definition comes from Netlingo.com.\n {}: {}\n'.format(bot_text,
                                                                                                  word,
                                                                                                  netlingo_dict[word])
+        # adds definition from webopedia to bot text
         if word in webopedia_dict:
             bot_text = u'{} The following definition comes from Webopedia.com.\n {}: {}\n'.format(bot_text,
                                                                                                   word,
                                                                                                   webopedia_dict[word])
 
-    print(comment.body)
+    print(u'\n{}\n{}'.format(comment.author, comment.body))
     print('\n\n')
     print(u'\x1b[6;30;42m {} \x1b[0m'.format(bot_text))
 
