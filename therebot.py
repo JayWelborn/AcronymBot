@@ -53,7 +53,7 @@ def parse_comments(submission, comment_history):
             continue
 
         elif comment.author is 'there_there_theramin':
-            print(u'\x1b[6;30;42mDon\'t reply to yourself')
+            print(u'\x1b[6;30;42mDon\'t reply to yourself\x1b[0m')
             with open('self_comment.txt', 'w') as file:
                 file.write('FOUND ONE!\n')
             continue
